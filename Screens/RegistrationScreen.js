@@ -90,6 +90,8 @@ top: -60,
     marginLeft: 16,
     marginRight: 16,
     marginBottom: 16,
+    border: 1,
+    borderColor: '#E8E8E8'
   },
   button: {
     borderRadius: 100,
