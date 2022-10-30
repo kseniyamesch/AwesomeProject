@@ -45,6 +45,7 @@ export default function LoginScreen() {
             >
               <Text style={loginStyles.formText}>Войти</Text>
               <TextInput
+                value={state.email}
                 onFocus={() => setIsShowKeyboard(true)}
                 onChangeText={(value) =>
                   setState((prevState) => ({ ...prevState, email: value }))
@@ -53,6 +54,7 @@ export default function LoginScreen() {
                 style={[loginStyles.input, { marginBottom: 16 }]}
               ></TextInput>
               <TextInput
+                value={state.password}
                 onFocus={() => setIsShowKeyboard(true)}
                 onChangeText={(value) =>
                   setState((prevState) => ({ ...prevState, password: value }))
