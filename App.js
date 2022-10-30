@@ -5,8 +5,8 @@ import LoginScreen from './Screens/LoginScreen';
 
 export default function App() {
   return (
-    // <RegistrationScreen></RegistrationScreen>
-    <LoginScreen></LoginScreen>
+    <RegistrationScreen></RegistrationScreen>
+    // <LoginScreen></LoginScreen>
     // <View style={styles.container}>
     //   <Text>Open up App.js to start working on your app!</Text>
     //   <StatusBar style="auto" />

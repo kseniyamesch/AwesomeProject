@@ -8,13 +8,29 @@ import {
   TouchableOpacity,
   Platform,
   KeyboardAvoidingView,
-  Keyboard
+  Keyboard,
+  TouchableWithoutFeedback
 } from "react-native";
+
+const initialState ={
+  login: '',
+  email: '',
+  password: ''
+}
 
 export default function RegistrationScreen() {
   const [isShowKeyboard, setIsShowKeyboard] = useState(false);
 
+  const keyboardHide = () => {
+    setIsShowKeyboard(false);
+    Keyboard.dismiss();
+    console.log(state);
+  }
+
+  const [state, setState] = useState(initialState);
+
   return (
+    <TouchableWithoutFeedback onPress={keyboardHide}>
     <View style={styles.container}>
       <ImageBackground
         source={require("../assets/images/Photo-BG.jpg")}
@@ -32,14 +48,23 @@ export default function RegistrationScreen() {
               style={styles.input}
               placeholder="Логин"
               onFocus={() => setIsShowKeyboard(true)}
+              onChangeText={(value) =>
+                setState((prevState) => ({ ...prevState, login: value }))
+              }
             ></TextInput>
             <TextInput
               onFocus={() => setIsShowKeyboard(true)}
+              onChangeText={(value) =>
+                setState((prevState) => ({ ...prevState, email: value }))
+              }
               placeholder="Адрес электронной почты"
               style={styles.input}
             ></TextInput>
             <TextInput
               onFocus={() => setIsShowKeyboard(true)}
+              onChangeText={(value) =>
+                setState((prevState) => ({ ...prevState, password: value }))
+              }
               placeholder="Пароль"
               secureTextEntry={true}
               style={styles.input}
@@ -47,7 +72,7 @@ export default function RegistrationScreen() {
             <TouchableOpacity
               style={styles.button}
               activeOpacity={0.8}
-              onPress={() => setIsShowKeyboard(false)}
+              onPress={keyboardHide}
             >
               <Text style={styles.btnText}>Зарегистрироваться</Text>
             </TouchableOpacity>
@@ -56,6 +81,7 @@ export default function RegistrationScreen() {
         </KeyboardAvoidingView>
       </ImageBackground>
     </View>
+    </TouchableWithoutFeedback>
   );
 }
 
@@ -108,6 +134,7 @@ const styles = StyleSheet.create({
     marginBottom: 16,
     border: 1,
     borderColor: "#E8E8E8",
+    borderRadius: 8,
   },
   button: {
     borderRadius: 100,

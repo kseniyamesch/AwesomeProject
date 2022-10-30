@@ -7,58 +7,75 @@ import {
   TextInput,
   TouchableOpacity,
   KeyboardAvoidingView,
-  Keyboard
+  Keyboard,
+  TouchableWithoutFeedback,
 } from "react-native";
+
+const initialState = {
+  email: "",
+  password: "",
+};
 
 export default function LoginScreen() {
   const [isShowKeyboard, setIsShowKeyboard] = useState(false);
 
   const keyboardHide = () => {
     setIsShowKeyboard(false);
-    Keyboard.dismiss()
-  }
+    Keyboard.dismiss();
+    console.log(state);
+  };
+
+  const [state, setState] = useState(initialState);
 
   return (
-    <View style={loginStyles.container}>
-      <ImageBackground
-        source={require("../assets/images/Photo-BG.jpg")}
-        style={loginStyles.image}
-      >
-        <KeyboardAvoidingView
-          behavior={Platform.OS === "ios" ? "padding" : "height"}
+    <TouchableWithoutFeedback onPress={keyboardHide}>
+      <View style={loginStyles.container}>
+        <ImageBackground
+          source={require("../assets/images/Photo-BG.jpg")}
+          style={loginStyles.image}
         >
-          <View
-            style={{
-              ...loginStyles.form,
-              paddingBottom: isShowKeyboard ? 32 : 144,
-            }}
+          <KeyboardAvoidingView
+            behavior={Platform.OS === "ios" ? "padding" : "height"}
           >
-            <Text style={loginStyles.formText}>Войти</Text>
-            <TextInput
-              onFocus={() => setIsShowKeyboard(true)}
-              placeholder="Адрес электронной почты"
-              style={[loginStyles.input, { marginBottom: 16 }]}
-            ></TextInput>
-            <TextInput
-              onFocus={() => setIsShowKeyboard(true)}
-              placeholder="Пароль"
-              secureTextEntry={true}
-              style={loginStyles.input}
-            ></TextInput>
-            <TouchableOpacity
-              style={loginStyles.btn}
-              activeOpacity={0.8}
-              onPress={keyboardHide}
+            <View
+              style={{
+                ...loginStyles.form,
+                paddingBottom: isShowKeyboard ? 32 : 144,
+              }}
             >
-              <Text style={loginStyles.btnText}>Войти</Text>
-            </TouchableOpacity>
-            <Text style={loginStyles.formBottomText}>
-              Нет аккаунта? Зарегистрироваться
-            </Text>
-          </View>
-        </KeyboardAvoidingView>
-      </ImageBackground>
-    </View>
+              <Text style={loginStyles.formText}>Войти</Text>
+              <TextInput
+                onFocus={() => setIsShowKeyboard(true)}
+                onChangeText={(value) =>
+                  setState((prevState) => ({ ...prevState, email: value }))
+                }
+                placeholder="Адрес электронной почты"
+                style={[loginStyles.input, { marginBottom: 16 }]}
+              ></TextInput>
+              <TextInput
+                onFocus={() => setIsShowKeyboard(true)}
+                onChangeText={(value) =>
+                  setState((prevState) => ({ ...prevState, password: value }))
+                }
+                placeholder="Пароль"
+                secureTextEntry={true}
+                style={loginStyles.input}
+              ></TextInput>
+              <TouchableOpacity
+                style={loginStyles.btn}
+                activeOpacity={0.8}
+                onPress={keyboardHide}
+              >
+                <Text style={loginStyles.btnText}>Войти</Text>
+              </TouchableOpacity>
+              <Text style={loginStyles.formBottomText}>
+                Нет аккаунта? Зарегистрироваться
+              </Text>
+            </View>
+          </KeyboardAvoidingView>
+        </ImageBackground>
+      </View>
+    </TouchableWithoutFeedback>
   );
 }
 
