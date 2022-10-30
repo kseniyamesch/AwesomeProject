@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import {
   View,
   StyleSheet,
@@ -6,30 +6,41 @@ import {
   Text,
   TextInput,
   TouchableOpacity,
-  KeyboardAvoidingView
+  KeyboardAvoidingView,
 } from "react-native";
 
 export default function LoginScreen() {
+  const [isShowKeyboard, setIsShowKeyboard] = useState(false);
+
   return (
     <View style={loginStyles.container}>
       <ImageBackground
         source={require("../assets/images/Photo-BG.jpg")}
         style={loginStyles.image}
       >
-      <View style={loginStyles.form}>
-        <Text style={loginStyles.formText}>Войти</Text>
-        <TextInput
-          placeholder="Адрес электронной почты"
-          style={[loginStyles.input, { marginBottom: 16 }]}
-        ></TextInput>
-        <TextInput placeholder="Пароль" style={loginStyles.input}></TextInput>
-        <TouchableOpacity style={loginStyles.btn} activeOpacity={0.8}>
-          <Text style={loginStyles.btnText}>Войти</Text>
-        </TouchableOpacity>
-        <Text style={loginStyles.formBottomText}>
-          Нет аккаунта? Зарегистрироваться
-        </Text>
-      </View>
+        <KeyboardAvoidingView
+          behavior={Platform.OS === "ios" ? "padding" : "height"}
+        >
+          <View style={loginStyles.form}>
+            <Text style={loginStyles.formText}>Войти</Text>
+            <TextInput
+              onFocus={() => setIsShowKeyboard(true)}
+              placeholder="Адрес электронной почты"
+              style={[loginStyles.input, { marginBottom: 16 }]}
+            ></TextInput>
+            <TextInput
+              onFocus={() => setIsShowKeyboard(true)}
+              placeholder="Пароль"
+              style={loginStyles.input}
+            ></TextInput>
+            <TouchableOpacity style={loginStyles.btn} activeOpacity={0.8}>
+              <Text style={loginStyles.btnText}>Войти</Text>
+            </TouchableOpacity>
+            <Text style={loginStyles.formBottomText}>
+              Нет аккаунта? Зарегистрироваться
+            </Text>
+          </View>
+        </KeyboardAvoidingView>
       </ImageBackground>
     </View>
   );

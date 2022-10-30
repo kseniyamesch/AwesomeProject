@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import {
   StyleSheet,
   Text,
@@ -11,6 +11,8 @@ import {
 } from "react-native";
 
 export default function RegistrationScreen() {
+  const [isShowKeyboard, setIsShowKeyboard] = useState(false);
+
   return (
     <View style={styles.container}>
       <ImageBackground
@@ -18,16 +20,23 @@ export default function RegistrationScreen() {
         style={styles.background}
       >
         <KeyboardAvoidingView
-         behavior={Platform.OS === "ios" ? "padding" : "height"}>
+          behavior={Platform.OS === "ios" ? "padding" : "height"}
+        >
           <View style={styles.form}>
             <View style={styles.addPhoto}></View>
             <Text style={styles.formText}>Регистрация</Text>
-            <TextInput style={styles.input} placeholder="Логин"></TextInput>
             <TextInput
+              style={styles.input}
+              placeholder="Логин"
+              onFocus={() => setIsShowKeyboard(true)}
+            ></TextInput>
+            <TextInput
+              onFocus={() => setIsShowKeyboard(true)}
               placeholder="Адрес электронной почты"
               style={styles.input}
             ></TextInput>
             <TextInput
+              onFocus={() => setIsShowKeyboard(true)}
               placeholder="Пароль"
               secureTextEntry={true}
               style={styles.input}
@@ -61,16 +70,16 @@ const styles = StyleSheet.create({
     borderTopStartRadius: 25,
     borderTopEndRadius: 25,
     paddingBottom: 78,
-    position: "relative"
+    position: "relative",
   },
   addPhoto: {
-position: 'absolute',
-width: 120,
-height: 120,
-borderRadius: 16,
-backgroundColor: '#F6F6F6',
-alignSelf: 'center',
-top: -60,
+    position: "absolute",
+    width: 120,
+    height: 120,
+    borderRadius: 16,
+    backgroundColor: "#F6F6F6",
+    alignSelf: "center",
+    top: -60,
   },
   formText: {
     paddingTop: 92,
@@ -91,7 +100,7 @@ top: -60,
     marginRight: 16,
     marginBottom: 16,
     border: 1,
-    borderColor: '#E8E8E8'
+    borderColor: "#E8E8E8",
   },
   button: {
     borderRadius: 100,
@@ -108,7 +117,7 @@ top: -60,
     color: "#FFFFFF",
   },
   formBottomText: {
-textAlign: 'center', 
-color: '#1B4371'
-  }
+    textAlign: "center",
+    color: "#1B4371",
+  },
 });
