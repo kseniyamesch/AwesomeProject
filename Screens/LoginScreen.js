@@ -7,10 +7,16 @@ import {
   TextInput,
   TouchableOpacity,
   KeyboardAvoidingView,
+  Keyboard
 } from "react-native";
 
 export default function LoginScreen() {
   const [isShowKeyboard, setIsShowKeyboard] = useState(false);
+
+  const keyboardHide = () => {
+    setIsShowKeyboard(false);
+    Keyboard.dismiss()
+  }
 
   return (
     <View style={loginStyles.container}>
@@ -21,7 +27,12 @@ export default function LoginScreen() {
         <KeyboardAvoidingView
           behavior={Platform.OS === "ios" ? "padding" : "height"}
         >
-          <View style={loginStyles.form}>
+          <View
+            style={{
+              ...loginStyles.form,
+              paddingBottom: isShowKeyboard ? 32 : 144,
+            }}
+          >
             <Text style={loginStyles.formText}>Войти</Text>
             <TextInput
               onFocus={() => setIsShowKeyboard(true)}
@@ -31,9 +42,14 @@ export default function LoginScreen() {
             <TextInput
               onFocus={() => setIsShowKeyboard(true)}
               placeholder="Пароль"
+              secureTextEntry={true}
               style={loginStyles.input}
             ></TextInput>
-            <TouchableOpacity style={loginStyles.btn} activeOpacity={0.8}>
+            <TouchableOpacity
+              style={loginStyles.btn}
+              activeOpacity={0.8}
+              onPress={keyboardHide}
+            >
               <Text style={loginStyles.btnText}>Войти</Text>
             </TouchableOpacity>
             <Text style={loginStyles.formBottomText}>
@@ -59,7 +75,7 @@ const loginStyles = StyleSheet.create({
     borderTopStartRadius: 25,
     borderTopEndRadius: 25,
     paddingTop: 32,
-    paddingBottom: 144,
+    // paddingBottom: 144,
     paddingHorizontal: 16,
   },
   formText: {

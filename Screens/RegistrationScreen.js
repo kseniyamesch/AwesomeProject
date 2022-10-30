@@ -8,6 +8,7 @@ import {
   TouchableOpacity,
   Platform,
   KeyboardAvoidingView,
+  Keyboard
 } from "react-native";
 
 export default function RegistrationScreen() {
@@ -22,7 +23,9 @@ export default function RegistrationScreen() {
         <KeyboardAvoidingView
           behavior={Platform.OS === "ios" ? "padding" : "height"}
         >
-          <View style={styles.form}>
+          <View
+            style={{ ...styles.form, paddingBottom: isShowKeyboard ? 32 : 78 }}
+          >
             <View style={styles.addPhoto}></View>
             <Text style={styles.formText}>Регистрация</Text>
             <TextInput
@@ -41,7 +44,11 @@ export default function RegistrationScreen() {
               secureTextEntry={true}
               style={styles.input}
             ></TextInput>
-            <TouchableOpacity style={styles.button} activeOpacity={0.8}>
+            <TouchableOpacity
+              style={styles.button}
+              activeOpacity={0.8}
+              onPress={() => setIsShowKeyboard(false)}
+            >
               <Text style={styles.btnText}>Зарегистрироваться</Text>
             </TouchableOpacity>
             <Text style={styles.formBottomText}>Уже есть аккаунт? Войти</Text>
