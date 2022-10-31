@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useSyncExternalStore, useEffect } from "react";
 import {
   StyleSheet,
   Text,
@@ -10,7 +10,11 @@ import {
   KeyboardAvoidingView,
   Keyboard,
   TouchableWithoutFeedback,
+  Dimensions
 } from "react-native";
+
+import * as Font from "expo-font";
+import AppLoading from "expo-app-loading";
 
 const initialState = {
   login: "",
@@ -18,17 +22,46 @@ const initialState = {
   password: "",
 };
 
+const loadApplication = async () => {
+  await Font.loadAsync({
+    "Roboto-regular": require("../assets/fonts/Roboto-Regular.ttf"),
+    "Roboto-bold": require("../assets/fonts/Roboto-Bold.ttf"),
+    "Roboto-medium": require("../assets/fonts/Roboto-Medium.ttf"),
+  });
+};
 export default function RegistrationScreen() {
   const [isShowKeyboard, setIsShowKeyboard] = useState(false);
+  const [state, setState] = useState(initialState);
+  const [isReady, setIsReady] = useState(false);
+  const [dimensions, setDimentions] = useState(Dimensions.get('window').width)
+
+  useEffect(() => {
+    const onChange = () => {
+      const width = Dimensions.get('window').width;
+      setDimentions(width)
+    }
+    const subscription = Dimensions.addEventListener('change', onChange);
+    return () => {
+      subscription?.remove()
+    }
+  }, [])
 
   const keyboardHide = () => {
     setIsShowKeyboard(false);
     Keyboard.dismiss();
+    setState(initialState);
     console.log(state);
   };
 
-  const [state, setState] = useState(initialState);
-
+  if (!isReady) {
+    return (
+      <AppLoading
+        startAsync={loadApplication}
+        onFinish={() => setIsReady(true)}
+        onError={console.warn}
+      />
+    );
+  }
   return (
     <TouchableWithoutFeedback onPress={keyboardHide}>
       <View style={styles.container}>
@@ -43,6 +76,8 @@ export default function RegistrationScreen() {
               style={{
                 ...styles.form,
                 paddingBottom: isShowKeyboard ? 32 : 78,
+                paddingHorizontal: dimensions > 500 ? 100 : 16,
+                width: dimensions
               }}
             >
               <View style={styles.addPhoto}></View>
@@ -98,6 +133,7 @@ const styles = StyleSheet.create({
   background: {
     flex: 1,
     justifyContent: "flex-end",
+    alignItems: 'center'
   },
   text: {
     textAlign: "center",
@@ -110,6 +146,7 @@ const styles = StyleSheet.create({
     borderTopEndRadius: 25,
     paddingBottom: 78,
     position: "relative",
+    paddingHorizontal: 16,
   },
   addPhoto: {
     position: "absolute",
@@ -123,20 +160,18 @@ const styles = StyleSheet.create({
   formText: {
     paddingTop: 92,
     textAlign: "center",
-    // fontFamily: "Roboto",
-    fontWeight: "500",
+    fontFamily: "Roboto-medium",
     fontSize: 30,
     lineHeight: 35,
     color: "#212121",
     marginBottom: 32,
   },
   input: {
+    fontFamily: 'Roboto-regular',
     backgroundColor: "#F6F6F6",
     paddingTop: 16,
     paddingLeft: 16,
     paddingBottom: 15,
-    marginLeft: 16,
-    marginRight: 16,
     marginBottom: 16,
     border: 1,
     borderColor: "#E8E8E8",
@@ -155,9 +190,11 @@ const styles = StyleSheet.create({
     lineHeight: 19,
     textAlign: "center",
     color: "#FFFFFF",
+    fontFamily: 'Roboto-regular',
   },
   formBottomText: {
     textAlign: "center",
     color: "#1B4371",
+    fontFamily: 'Roboto-regular',
   },
 });

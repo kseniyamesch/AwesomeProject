@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import {
   View,
   StyleSheet,
@@ -9,23 +9,59 @@ import {
   KeyboardAvoidingView,
   Keyboard,
   TouchableWithoutFeedback,
+  Dimensions
 } from "react-native";
+
+import * as Font from "expo-font";
+import AppLoading from "expo-app-loading";
 
 const initialState = {
   email: "",
   password: "",
 };
 
+const loadApplication = async () => {
+  await Font.loadAsync({
+    "Roboto-regular": require("../assets/fonts/Roboto-Regular.ttf"),
+    "Roboto-bold": require("../assets/fonts/Roboto-Bold.ttf"),
+    "Roboto-medium": require("../assets/fonts/Roboto-Medium.ttf"),
+  });
+};
+
 export default function LoginScreen() {
   const [isShowKeyboard, setIsShowKeyboard] = useState(false);
+  const [state, setState] = useState(initialState);
+  const [isReady, setIsReady] = useState(false);
+  const [dimensions, setDimentions] = useState(Dimensions.get('window').width)
+
+
+  useEffect(() => {
+    const onChange = () => {
+      const width = Dimensions.get('window').width - 20 * 2;
+      setDimentions(width)
+    }
+    const subscription = Dimensions.addEventListener('change', onChange);
+    return () => {
+      subscription?.remove()
+    }
+  }, [])
 
   const keyboardHide = () => {
     setIsShowKeyboard(false);
     Keyboard.dismiss();
+    setState(initialState);
     console.log(state);
   };
 
-  const [state, setState] = useState(initialState);
+  if (!isReady) {
+    return (
+      <AppLoading
+        startAsync={loadApplication}
+        onFinish={() => setIsReady(true)}
+        onError={console.warn}
+      />
+    );
+  }
 
   return (
     <TouchableWithoutFeedback onPress={keyboardHide}>
@@ -41,6 +77,8 @@ export default function LoginScreen() {
               style={{
                 ...loginStyles.form,
                 paddingBottom: isShowKeyboard ? 32 : 144,
+                paddingHorizontal: dimensions > 500 ? 100 : 16,
+                width: dimensions,
               }}
             >
               <Text style={loginStyles.formText}>Войти</Text>
@@ -94,13 +132,12 @@ const loginStyles = StyleSheet.create({
     borderTopStartRadius: 25,
     borderTopEndRadius: 25,
     paddingTop: 32,
-    // paddingBottom: 144,
     paddingHorizontal: 16,
   },
   formText: {
     color: "#212121",
     textAlign: "center",
-    fontWeight: "500",
+    fontFamily: "Roboto-medium",
     fontSize: 30,
     lineHeight: 35,
     marginBottom: 33,
@@ -113,6 +150,7 @@ const loginStyles = StyleSheet.create({
     border: 1,
     borderColor: "#E8E8E8",
     borderRadius: 8,
+    fontFamily: 'Roboto-regular',
   },
   btn: {
     borderRadius: 100,
@@ -127,9 +165,11 @@ const loginStyles = StyleSheet.create({
     lineHeight: 19,
     textAlign: "center",
     color: "#FFFFFF",
+    fontFamily: 'Roboto-regular',
   },
   formBottomText: {
     textAlign: "center",
     color: "#1B4371",
+    fontFamily: 'Roboto-regular',
   },
 });
