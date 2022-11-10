@@ -1,4 +1,4 @@
-import React, { useState, useSyncExternalStore, useEffect } from "react";
+import React, { useState, useEffect, useCallback } from "react";
 import {
   StyleSheet,
   Text,
@@ -10,11 +10,15 @@ import {
   KeyboardAvoidingView,
   Keyboard,
   TouchableWithoutFeedback,
-  Dimensions
+  Dimensions,
 } from "react-native";
 
-import * as Font from "expo-font";
-import AppLoading from "expo-app-loading";
+// import * as Font from "expo-font";
+// import * as SplashScreen from "expo-splash-screen";
+/*--------------------------------------------------*/
+// import AppLoading from "expo-app-loading";
+
+// SplashScreen.preventAutoHideAsync();
 
 const initialState = {
   login: "",
@@ -22,29 +26,40 @@ const initialState = {
   password: "",
 };
 
-const loadApplication = async () => {
-  await Font.loadAsync({
-    "Roboto-regular": require("../assets/fonts/Roboto-Regular.ttf"),
-    "Roboto-bold": require("../assets/fonts/Roboto-Bold.ttf"),
-    "Roboto-medium": require("../assets/fonts/Roboto-Medium.ttf"),
-  });
-};
-export default function RegistrationScreen() {
+export default function RegistrationScreen({onLayoutRootView}) {
   const [isShowKeyboard, setIsShowKeyboard] = useState(false);
   const [state, setState] = useState(initialState);
-  const [isReady, setIsReady] = useState(false);
-  const [dimensions, setDimentions] = useState(Dimensions.get('window').width)
+  // const [isReady, setIsReady] = useState(false);
+  const [dimensions, setDimentions] = useState(Dimensions.get("window").width);
 
   useEffect(() => {
     const onChange = () => {
-      const width = Dimensions.get('window').width;
-      setDimentions(width)
-    }
-    const subscription = Dimensions.addEventListener('change', onChange);
+      const width = Dimensions.get("window").width;
+      setDimentions(width);
+    };
+    const subscription = Dimensions.addEventListener("change", onChange);
     return () => {
-      subscription?.remove()
-    }
-  }, [])
+      subscription?.remove();
+    };
+  }, []);
+
+  // useEffect(() => {
+  //   async function prepare() {
+  //     try {
+  //       await Font.loadAsync({
+  //         "Roboto-regular": require("../assets/fonts/Roboto-Regular.ttf"),
+  //         "Roboto-bold": require("../assets/fonts/Roboto-Bold.ttf"),
+  //         "Roboto-medium": require("../assets/fonts/Roboto-Medium.ttf"),
+  //       });
+  //     } catch (e) {
+  //       console.warn(e);
+  //     } finally {
+  //       setIsReady(true);
+  //     }
+  //   }
+
+  //   prepare();
+  // }, []);
 
   const keyboardHide = () => {
     setIsShowKeyboard(false);
@@ -53,18 +68,38 @@ export default function RegistrationScreen() {
     console.log(state);
   };
 
-  if (!isReady) {
-    return (
-      <AppLoading
-        startAsync={loadApplication}
-        onFinish={() => setIsReady(true)}
-        onError={console.warn}
-      />
-    );
-  }
+
+    // async function loadApplication() {
+    //     await Font.loadAsync({
+    //       "Roboto-regular": require("../assets/fonts/Roboto-Regular.ttf"),
+    //       "Roboto-bold": require("../assets/fonts/Roboto-Bold.ttf"),
+    //       "Roboto-medium": require("../assets/fonts/Roboto-Medium.ttf"),
+    //     });
+    // }
+
+  //   if (!isReady) {
+  //   return (
+  //     <AppLoading
+  //       startAsync={loadApplication}
+  //       onFinish={() => setIsReady(true)}
+  //       onError={console.warn}
+  //     />
+  //   );
+  // }
+
+  // const onLayoutRootView = useCallback(async () => {
+  //   if (isReady) {
+  //     await SplashScreen.hideAsync();
+  //   }
+  // }, [isReady]);
+
+  // if (!isReady) {
+  //   return null;
+  // }
+
   return (
-    <TouchableWithoutFeedback onPress={keyboardHide}>
-      <View style={styles.container}>
+    <TouchableWithoutFeedback onPress={keyboardHide} >
+      <View style={styles.container} onLayout={onLayoutRootView}>
         <ImageBackground
           source={require("../assets/images/Photo-BG.jpg")}
           style={styles.background}
@@ -77,7 +112,7 @@ export default function RegistrationScreen() {
                 ...styles.form,
                 paddingBottom: isShowKeyboard ? 32 : 78,
                 paddingHorizontal: dimensions > 500 ? 100 : 16,
-                width: dimensions
+                width: dimensions,
               }}
             >
               <View style={styles.addPhoto}></View>
@@ -133,7 +168,7 @@ const styles = StyleSheet.create({
   background: {
     flex: 1,
     justifyContent: "flex-end",
-    alignItems: 'center'
+    alignItems: "center",
   },
   text: {
     textAlign: "center",
@@ -167,7 +202,7 @@ const styles = StyleSheet.create({
     marginBottom: 32,
   },
   input: {
-    fontFamily: 'Roboto-regular',
+    fontFamily: "Roboto-regular",
     backgroundColor: "#F6F6F6",
     paddingTop: 16,
     paddingLeft: 16,
@@ -190,11 +225,11 @@ const styles = StyleSheet.create({
     lineHeight: 19,
     textAlign: "center",
     color: "#FFFFFF",
-    fontFamily: 'Roboto-regular',
+    fontFamily: "Roboto-regular",
   },
   formBottomText: {
     textAlign: "center",
     color: "#1B4371",
-    fontFamily: 'Roboto-regular',
+    fontFamily: "Roboto-regular",
   },
 });

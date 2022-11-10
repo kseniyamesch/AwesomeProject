@@ -9,31 +9,21 @@ import {
   KeyboardAvoidingView,
   Keyboard,
   TouchableWithoutFeedback,
-  Dimensions
+  Dimensions,
+  Button
 } from "react-native";
-
-import * as Font from "expo-font";
-import AppLoading from "expo-app-loading";
 
 const initialState = {
   email: "",
   password: "",
 };
 
-const loadApplication = async () => {
-  await Font.loadAsync({
-    "Roboto-regular": require("../assets/fonts/Roboto-Regular.ttf"),
-    "Roboto-bold": require("../assets/fonts/Roboto-Bold.ttf"),
-    "Roboto-medium": require("../assets/fonts/Roboto-Medium.ttf"),
-  });
-};
-
-export default function LoginScreen() {
+export default function LoginScreen({onLayoutRootView, navigation}) {
   const [isShowKeyboard, setIsShowKeyboard] = useState(false);
   const [state, setState] = useState(initialState);
-  const [isReady, setIsReady] = useState(false);
   const [dimensions, setDimentions] = useState(Dimensions.get('window').width)
 
+  console.log("navigation", navigation);
 
   useEffect(() => {
     const onChange = () => {
@@ -53,19 +43,9 @@ export default function LoginScreen() {
     console.log(state);
   };
 
-  if (!isReady) {
-    return (
-      <AppLoading
-        startAsync={loadApplication}
-        onFinish={() => setIsReady(true)}
-        onError={console.warn}
-      />
-    );
-  }
-
   return (
     <TouchableWithoutFeedback onPress={keyboardHide}>
-      <View style={loginStyles.container}>
+      <View style={loginStyles.container} onLayout={onLayoutRootView}>
         <ImageBackground
           source={require("../assets/images/Photo-BG.jpg")}
           style={loginStyles.image}
@@ -111,6 +91,7 @@ export default function LoginScreen() {
               <Text style={loginStyles.formBottomText}>
                 Нет аккаунта? Зарегистрироваться
               </Text>
+              <Button title="Go to register"></Button>
             </View>
           </KeyboardAvoidingView>
         </ImageBackground>
